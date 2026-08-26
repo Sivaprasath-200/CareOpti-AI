@@ -1,0 +1,17 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from app.core.config import settings
+
+# engine = create_engine(settings.DATABASE_URL, echo=False)
+# For testing locally without docker/postgres, you can use SQLite if absolutely needed,
+# but as per requirements, we will strictly use PostgreSQL.
+engine = create_engine(settings.DATABASE_URL, echo=False)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
